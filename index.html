@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6247d8"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="SzorzóMester">
+
+<title>SzorzóMester – Szorzás és bennfoglalás</title>
+<style>
+:root{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#24203a;background:#f3f1ff}*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(circle at 10% 0%,#ede5ff,transparent 50%),linear-gradient(180deg,#f7f5ff,#e9efff)}main{max-width:490px;margin:auto;padding:24px 18px 34px}.brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.logo{font-size:22px;font-weight:900;letter-spacing:-.6px}.logo span{color:#6744e9}.badge{background:white;border-radius:100px;padding:9px 12px;color:#605a86;font-size:13px;font-weight:750;box-shadow:0 4px 18px #6855a012}.panel{background:#fff;border-radius:28px;padding:27px 23px;box-shadow:0 18px 48px #5342aa19;border:1px solid #ffffffd1}.mascot{font-size:52px;text-align:center;margin:4px 0 9px}.center{text-align:center}h1{font-size:28px;line-height:1.15;margin:9px 0}p{color:#6b6884;line-height:1.5}label{display:block;font-weight:800;margin:20px 0 10px}.chips{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.chip{border:2px solid #e8e3ff;border-radius:14px;background:#f7f5ff;padding:11px 0;font-size:18px;font-weight:800;color:#544c83;cursor:pointer}.chip.selected{background:#684be5;color:#fff;border-color:#684be5}.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice{border:2px solid #e8e3ff;border-radius:13px;background:#f8f7ff;color:#3e366c;font-weight:800;font-size:16px;padding:13px;cursor:pointer}.choice.active{background:#684be5;color:white;border-color:#684be5}.cta{background:#6747e8;color:white;border:0;border-radius:17px;font-size:18px;font-weight:850;padding:17px 20px;width:100%;box-shadow:0 8px 18px #6247d83e;cursor:pointer;margin-top:22px}.cta:disabled{opacity:.5;cursor:default}.secondary{background:#eeeaff;color:#5d42d4;box-shadow:none}.hidden{display:none!important}.stats{display:flex;justify-content:space-between;align-items:center;font-weight:800;color:#625b81}.progress{height:10px;border-radius:8px;background:#eeeafb;overflow:hidden;margin:15px 0 31px}.progress-fill{height:100%;background:linear-gradient(90deg,#8d73ff,#4ed8b2);transition:width .2s}.equation{text-align:center;font-size:clamp(43px,12vw,67px);font-weight:900;letter-spacing:-2px;margin:22px 0 28px;color:#32265d}.answer{font:800 35px system-ui;text-align:center;width:100%;border:3px solid #e5defc;border-radius:18px;padding:13px;outline:0;color:#392d6a;background:#fcfbff}.answer:focus{border-color:#7456ef}.feedback{min-height:57px;padding-top:12px;text-align:center;font-weight:800;font-size:18px}.good{color:#078a63}.bad{color:#c4495b}.small{font-size:13px}.score{font-size:70px;text-align:center;font-weight:900;color:#6747e8;margin:5px 0}.subtle{color:#79748c}.foot{text-align:center;font-size:12px;color:#847f9a;margin-top:20px}@media(max-width:370px){.panel{padding:22px 16px}.chip{padding:9px 0}}
+.modes{display:grid;grid-template-columns:1fr;gap:9px}.mode{width:100%;border:2px solid #e8e3ff;border-radius:14px;background:#f8f7ff;color:#443874;font-size:17px;font-weight:800;padding:14px;cursor:pointer;text-align:left}.mode.active{background:#6747e8;color:#fff;border-color:#6747e8}button:focus-visible{outline:3px solid #17aa91;outline-offset:2px}</style></head>
+<body><main><div class="brand"><div class="logo">✨ Szorzó<span>Mester</span></div><div class="badge">Szorzás és osztás</div></div>
+<section id="setup" class="panel"><div class="mascot">🦊</div><h1 class="center">Gyakoroljunk együtt!</h1><p class="center">Szorzás, bennfoglalás vagy mindkettő: te választasz!</p><label>Mit szeretnél gyakorolni?</label><div class="modes" role="group" aria-label="Művelet kiválasztása"><button type="button" data-mode="multiply" class="mode active">✖️ Szorzás</button><button type="button" data-mode="divide" class="mode">➗ Bennfoglalás</button><button type="button" data-mode="mixed" class="mode">🎲 Vegyes</button></div><label>Melyik számot gyakorlod?</label><div id="tables" class="chips" role="group" aria-label="Szorzótábla kiválasztása"></div><label>Hány feladat legyen?</label><div class="choices"><button class="choice active" data-count="10">10 feladat</button><button class="choice" data-count="20">20 feladat</button></div><button id="start" class="cta">Indulhat a játék! 🚀</button></section>
+<section id="quiz" class="panel hidden"><div class="stats"><span id="step">1 / 10. feladat</span><span id="points">⭐ 0 pont</span></div><div class="progress"><div class="progress-fill" id="bar" style="width:0%"></div></div><p class="center" style="margin-bottom:2px">Mennyi az eredmény?</p><div id="equation" class="equation" aria-live="polite">6 × 7 = ?</div><form id="answerForm"><input id="answer" class="answer" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="100" placeholder="?" autocomplete="off" aria-label="A feladat eredménye" required><button id="check" class="cta" type="submit">Ellenőrzés ✓</button></form><div id="feedback" class="feedback" aria-live="polite"></div><button id="next" class="cta secondary hidden">Következő ➜</button></section>
+<section id="finish" class="panel hidden"><div id="finishIcon" class="mascot">🏆</div><h1 class="center">Szép munka!</h1><div id="finalScore" class="score">8 / 10</div><p id="finalText" class="center"></p><p id="best" class="center small"></p><button id="again" class="cta">Új játék 🔁</button></section>
+<div class="foot">Reklámmentes • Szorzás és bennfoglalás • Internet nélkül</div></main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+let selected=0,mode='multiply',count=10,questions=[],index=0,score=0,checked=false;
+const tables=$('tables');
+function show(id){['setup','quiz','finish'].forEach(s=>$(s).classList.toggle('hidden',s!==id))}
+for(let n=0;n<=10;n++){
+ const b=document.createElement('button');b.type='button';b.className='chip'+(n===0?' selected':'');
+ b.textContent=n===0?'Vegyes':String(n);
+ if(n===0){b.style.gridColumn='span 2';b.style.fontSize='15px'}
+ b.onclick=()=>{selected=n;[...tables.children].forEach(x=>x.classList.remove('selected'));b.classList.add('selected')};tables.appendChild(b);
+}
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b))});
+document.querySelectorAll('[data-count]').forEach(b=>b.onclick=()=>{count=Number(b.dataset.count);document.querySelectorAll('[data-count]').forEach(x=>x.classList.toggle('active',x===b))});
+const random=()=>Math.floor(Math.random()*10)+1;
+function makeQuestions(){const q=[];let previous='';for(let i=0;i<count;i++){
+ let a,b,operation,key,attempt=0;
+ do{a=selected||random();b=random();operation=mode==='mixed'?(Math.random()<.5?'multiply':'divide'):mode;key=operation+','+a+','+b;attempt++}while(key===previous&&attempt<30);
+ previous=key;
+ // Bennfoglalás: a×b : a = b, ezért az eredmény mindig egész 1–10 között.
+ q.push(operation==='divide'?{left:a*b,right:a,result:b,operation}:{left:a,right:b,result:a*b,operation});
+ }return q}
+function render(){const q=questions[index];checked=false;
+ $('step').textContent=`${index+1} / ${count}. feladat`;$('points').textContent=`⭐ ${score} pont`;
+ $('bar').style.width=(index/count*100)+'%';$('equation').textContent=`${q.left} ${q.operation==='divide'?'÷':'×'} ${q.right} = ?`;
+ $('answer').value='';$('answer').disabled=false;$('check').classList.remove('hidden');$('next').classList.add('hidden');
+ $('feedback').textContent='';$('feedback').className='feedback';$('answer').focus();
+}
+$('start').onclick=()=>{questions=makeQuestions();index=0;score=0;show('quiz');render()};
+$('answerForm').addEventListener('submit',e=>{e.preventDefault();if(checked||$('answer').value==='')return;
+ checked=true;const q=questions[index],correct=Number($('answer').value)===q.result;
+ if(correct)score++;$('points').textContent=`⭐ ${score} pont`;
+ $('feedback').textContent=correct?'🎉 Ügyes vagy! Helyes válasz!':`💡 A helyes megoldás: ${q.result}`;
+ $('feedback').classList.add(correct?'good':'bad');$('answer').disabled=true;$('check').classList.add('hidden');
+ $('next').textContent=index===count-1?'Eredményem 🏆':'Következő ➜';$('next').classList.remove('hidden');
+ $('bar').style.width=((index+1)/count*100)+'%';
+});
+$('next').onclick=()=>{index++;if(index<count){render();return}show('finish');
+ $('finalScore').textContent=`${score} / ${count}`;const percent=score/count;
+ $('finishIcon').textContent=percent===1?'🏆':percent>=.7?'🌟':'💪';
+ $('finalText').textContent=percent===1?'Hibátlan! Te vagy a SzorzóMester bajnoka!':percent>=.7?'Nagyon ügyes voltál! Jöhet még egy kör?':'Minden gyakorlással egyre ügyesebb leszel!';
+ try{const k='szorzomester-best-'+mode+'-'+selected+'-'+count;const best=Math.max(score,Number(localStorage.getItem(k)||0));localStorage.setItem(k,String(best));$('best').textContent=`Eddigi legjobb eredményed: ${best} / ${count}`}
+ catch(e){$('best').textContent=''};
+};
+$('again').onclick=()=>show('setup');
+})();
+</script></body></html>
